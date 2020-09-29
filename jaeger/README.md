@@ -28,3 +28,6 @@ docker run --rm \
 
 ## 参照资料
 https://xenojoshua.com//2019/04/jaeger-note/#51-metrics
+
+官方文档
+https://www.jaegertracing.io/docs/1.19/deployment/#cassandra
