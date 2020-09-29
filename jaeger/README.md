@@ -23,3 +23,8 @@ docker run --rm \
   -e CQLSH_HOST=120.26.72.91 \
   -e KEYSPACE=jaeger_v1 \
   jaegertracing/jaeger-cassandra-schema
+
+
+
+## 参照资料
+https://xenojoshua.com//2019/04/jaeger-note/#51-metrics
