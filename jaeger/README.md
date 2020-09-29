@@ -17,4 +17,9 @@ export DATACENTER=dc1
 export KEYSPACE=jaeger_v1
 
 4.初始化cassandra表结构
-sh ./create.sh | cqlsh 120.26.72.91
+docker run --rm \
+  --name jaeger-cassandra-schema \
+  -e MODE=prod \
+  -e CQLSH_HOST=120.26.72.91 \
+  -e KEYSPACE=jaeger_v1 \
+  jaegertracing/jaeger-cassandra-schema
