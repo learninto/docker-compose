@@ -1,0 +1,27 @@
+version: '2'
+services:
+  M:
+    image: index.docker.io/library/cassandra:3.9
+    container_name: cassandra-7000
+    volumes:
+    - /ssddata/workspace/data/cassandra/cassandra/7000:/var/lib/cassandra
+    environment:
+    - CASSANDRA_BROADCAST_ADDRESS=cassandra-7000
+    ports:
+    - 7000:7000
+    - 9042:9042
+    restart: always
+  S:
+    image: index.docker.io/library/cassandra:3.9
+    container_name: cassandra-7001
+    volumes:
+    - /ssddata/workspace/data/cassandra/cassandra/7001:/var/lib/cassandra
+    environment:
+    - CASSANDRA_BROADCAST_ADDRESS=cassandra-7001
+    - CASSANDRA_SEEDS=cassandra-7000
+    ports:
+    - 7001:7000
+    - 9043:9042
+    depends_on:
+    - M
+    restart: always
