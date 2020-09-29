@@ -2,43 +2,58 @@ version: '2'
 services:
   Collector:
     container_name: LD_JaegerCollector
-    image: jaegertracing/jaeger-collector:latest
+    image: jaegertracing/jaeger-collector
     network_mode: host
-    environment:
-    - SPAN_STORAGE_TYPE=elasticsearch
-    - ES_SERVER_URLS=http://es-cn-6ja1sqrfs002vkswr.elasticsearch.aliyuncs.com:9200
-    - ES_USERNAME=elastic
-    - ES_PASSWORD=Laidian360
-    - LOG_LEVEL=debug
     ports:
     - 14269
     - 14268:14268
-    - 14267
+    - 14267:14267
     - 14250:14250
     - 9411:9411
     restart: always
+    command:
+    - --es.server-urls=请补充ES地址:9200
+    - --es.username=Es账号
+    - --es.password=Es密码
+    - --es.num-shards=1
+    - --es.num-replicas=0
+    - --collector.http-server.host-port=9411
+    - --collector.grpc-port=14250
+    - --collector.http-port=14268
+    - --log-level=debug
+    environment:
+    - SPAN_STORAGE_TYPE=elasticsearch
+    - ES_TAGS_AS_FIELDS=true
   Agent:
     container_name: LD_JaegerAgent
-    image: index.docker.io/jaegertracing/jaeger-agent:latest
+    image: index.docker.io/jaegertracing/jaeger-agent
     network_mode: host
-    environment:
-    - REPORTER_GRPC_HOST_PORT=172.16.191.46:14250
-    - LOG_LEVEL=debug
     ports:
     - 5775:5775/udp
     - 5778:5778
     - 6831:6831/udp
     - 6832:6832/udp
+    command:
+    - --reporter.type=grpc
+    - --reporter.grpc.host-port=请补充IP:14250
+    - --log-level=debug
     restart: always
+    depends_on:
+    - Collector
   Query:
     container_name: LD_JaegerQuery
-    image: jaegertracing/jaeger-query:latest
+    image: jaegertracing/jaeger-query
     network_mode: host
-    environment:
-    - SPAN_STORAGE_TYPE=elasticsearch
-    - ES_SERVER_URLS=http://es-cn-6ja1sqrfs002vkswr.elasticsearch.aliyuncs.com:9200
-    - ES_USERNAME=elastic
-    - ES_PASSWORD=Laidian360
-    - LOG_LEVEL=debug
     ports:
     - 16686:16686
+    command:
+    - --es.server-urls=请补充ES地址:9200
+    - --es.username=Es账号
+    - --es.password=Es密码
+    - --es.version=5
+    - --log-level=debug
+    environment:
+    - SPAN_STORAGE_TYPE=elasticsearch
+    restart: always
+    depends_on:
+    - Collector
